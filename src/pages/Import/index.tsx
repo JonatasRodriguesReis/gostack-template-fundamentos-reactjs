@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -23,19 +25,28 @@ const Import: React.FC = () => {
   const history = useHistory();
 
   async function handleUpload(): Promise<void> {
-    // const data = new FormData();
-
+    const data = new FormData();
+    data.append('file', uploadedFiles[0].file);
     // TODO
-
     try {
-      // await api.post('/transactions/import', data);
+      await api.post('/transactions/import', data);
     } catch (err) {
-      // console.log(err.response.error);
+      console.log(err.response.error);
     }
   }
 
   function submitFile(files: File[]): void {
-    // TODO
+    const filesProps: FileProps[] = [];
+    for (const key in files) {
+      const file = files[key];
+      filesProps.push({
+        file,
+        name: file.name,
+        readableSize: file.size.toString(),
+      });
+    }
+
+    setUploadedFiles(filesProps);
   }
 
   return (
